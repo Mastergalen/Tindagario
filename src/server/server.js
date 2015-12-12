@@ -1,11 +1,14 @@
 /*jslint bitwise: true, node: true */
 'use strict';
 
+require('dotenv').load();
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var SAT = require('sat');
+
+var messagebird = require('messagebird')(process.env.MESSAGEBIRD_KEY);
 
 // Import game settings
 var c = require('../../config.json');
@@ -35,6 +38,25 @@ var C = SAT.Circle;
 var initMassLog = util.log(c.defaultPlayerMass, c.slowBase);
 
 app.use(express.static(__dirname + '/../client'));
+
+/**
+ * Send SMS to mobile after death with phone number
+ * of the capturer and FB profile link.
+ *
+ */
+function sendMessage(recipient, capturer) {
+    var params = {
+      'originator': c.appName,
+      'recipients': [recipient.phone],
+      'body': 'You got eaten! Here\'s  their number and FB profile. Go crazy. ' + capturer.phone + ' | ' + capturer.facebook
+    };
+
+    messagebird.messages.create(params, function (err, response) {
+      if (err) {
+        return console.log(err);
+      }
+    });
+}
 
 function addFood(toAdd) {
     var radius = util.massToRadius(c.foodMass);
@@ -502,6 +524,7 @@ function tickPlayer(currentPlayer) {
                     users.splice(numUser, 1);
                     io.emit('playerDied', { name: collision.bUser.name });
                     sockets[collision.bUser.id].emit('RIP');
+                    sendMessage(collision.bUser, collision.aUser);
                 }
             }
             currentPlayer.massTotal += collision.bUser.mass;
