@@ -1,4 +1,5 @@
 {
+    "appName": "Tindagario",
     "port": 3000,
     "foodMass": 1,
     "fireFood": 20,
