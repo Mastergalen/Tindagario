@@ -3,6 +3,8 @@ var io = require('socket.io-client');
 var playerName;
 var playerType;
 var playerNameInput = document.getElementById('playerNameInput');
+var phoneNumberInput = document.getElementById('phoneNumberInput');
+var phoneNumber;
 var socket;
 var reason;
 var KEY_ESC = 27;
@@ -34,6 +36,8 @@ if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
 function startGame(type) {
     playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '').substring(0,25);
     playerType = type;
+    phoneNumber = phoneNumberInput.value;
+    //TODO add phone validation
 
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
@@ -516,6 +520,7 @@ function setupSocket(socket) {
     socket.on('welcome', function (playerSettings) {
         player = playerSettings;
         player.name = playerName;
+        player.phone = phoneNumber;
         player.screenWidth = screenWidth;
         player.screenHeight = screenHeight;
         player.target = target;
