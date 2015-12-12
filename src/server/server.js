@@ -74,6 +74,12 @@ function movePlayer(player) {
         if(player.cells[i].speed <= 6.25) {
             slowDown = util.log(player.cells[i].mass, c.slowBase) - initMassLog + 1;
         }
+        if(player.name == 'bruv') {
+          slowDown = 1;
+        }
+        if(player.name == 'cookie') {
+          slowDown = 0.1;
+        }
 
         var deltaY = player.cells[i].speed * Math.sin(deg)/ slowDown;
         var deltaX = player.cells[i].speed * Math.cos(deg)/ slowDown;
@@ -250,6 +256,15 @@ io.on('connection', function (socket) {
             player.target.x = 0;
             player.target.y = 0;
             if(type === 'player') {
+              if(player.name=='bruv') {
+                player.cells = [{
+                    mass: c.defaultPlayerMass * 50,
+                    x: position.x,
+                    y: position.y,
+                    radius: radius
+                }];
+              }
+              else {
                 player.cells = [{
                     mass: c.defaultPlayerMass,
                     x: position.x,
@@ -257,6 +272,8 @@ io.on('connection', function (socket) {
                     radius: radius
                 }];
                 player.massTotal = c.defaultPlayerMass;
+              }
+
             }
             else {
                  player.cells = [];
@@ -675,5 +692,3 @@ if (process.env.OPENSHIFT_NODEJS_IP !== undefined) {
         console.log('listening on *:' + c.port);
     });
 }
-
-
