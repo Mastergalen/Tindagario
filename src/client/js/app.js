@@ -56,8 +56,47 @@ function startGame(type) {
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
     var regex = /^\w*$/;
+    var nickErrorText = document.getElementById('nick-error');
     debug('Regex Test', regex.exec(playerNameInput.value));
-    return regex.exec(playerNameInput.value) !== null;
+    if(playerNameInput.value === "") {
+      nickErrorText.style.opacity = 1;
+      return false;
+    }
+    if(regex.exec(playerNameInput.value) !== null) {
+      nickErrorText.style.opacity = 0;
+      return true;
+    }
+    else {
+      nickErrorText.style.opacity = 1;
+      return false;
+    }
+}
+
+//TODO: Still needs testing
+function validPhone() {
+  var regex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+  var phoneErrorText = document.getElementById("phone-error");
+  debug('Regex Test', regex.exec(phoneNumberInput.value));
+  if(regex.exec(phoneNumberInput.value) !== null) {
+    phoneErrorText.style.opacity = 0;
+    return true;
+  }
+  else {
+    phoneErrorText.style.opacity = 1;
+    return false;
+  }
+}
+
+function facebookLoggedIn() {
+  var facebookErrorText = document.getElementById("facebook-error");
+  if(window.facebookURL !== "") {
+    facebookErrorText.style.opacity = 0;
+    return true;
+  }
+  else {
+    facebookErrorText.style.opacity = 1;
+    return false;
+  }
 }
 
 window.onload = function() {
@@ -72,11 +111,8 @@ window.onload = function() {
     btn.onclick = function () {
 
         // check if the nick is valid
-        if (validNick()) {
-            nickErrorText.style.opacity = 0;
-            startGame('player');
-        } else {
-            nickErrorText.style.opacity = 1;
+        if (validNick() && validPhone() && facebookLoggedIn()) {
+          startGame('player');
         }
     };
 
@@ -520,6 +556,7 @@ function setupSocket(socket) {
     socket.on('welcome', function (playerSettings) {
         player = playerSettings;
         player.name = playerName;
+        player.facebookURL = window.facebookURL;
         player.phone = phoneNumber;
         player.screenWidth = screenWidth;
         player.screenHeight = screenHeight;
@@ -727,10 +764,24 @@ function drawPlayers(order) {
             }
 
         }
+
+
         graph.lineJoin = 'round';
         graph.lineCap = 'round';
-        graph.fill();
-        graph.stroke();
+        graph.save();
+
+        //graph.beginPath();
+        //graph.arc(circle.x, circle.y, cellCurrent.radius, 0, Math.PI*2,true);
+        //graph.closePath();
+        //graph.clip();
+
+        var profileImage = new Image();
+        profileImage.src = userCurrent.facebookURL + "/picture?type=normal";
+        graph.drawImage(profileImage, circle.x - cellCurrent.radius, circle.y - cellCurrent.radius, cellCurrent.radius * 2, cellCurrent.radius * 2);
+
+        //graph.restore();
+        //graph.fill();
+        //graph.stroke();
         var nameCell = "";
         if(typeof(userCurrent.id) == "undefined")
             nameCell = player.name;
@@ -944,4 +995,3 @@ function resize() {
     player.screenHeight = c.height = screenHeight = playerType == 'player' ? window.innerHeight : gameHeight;
     socket.emit('windowResized', { screenWidth: screenWidth, screenHeight: screenHeight });
 }
-

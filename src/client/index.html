@@ -5,6 +5,7 @@
     <title>Tindagario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="css/main.css" />
+    <script>window.facebookURL = "";</script>
 </head>
 <body>
     <div id="gameAreaWrapper">
@@ -14,23 +15,31 @@
             <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="35" />
         </div>
         <canvas tabindex="1" id="cvs"></canvas>
+        <div id="images"></div>
     </div>
     <div id="startMenuWrapper">
         <div id="startMenu">
             <p>Tindagario</p>
-            <script src="js/facebook-login.js"></script>
             <script>
               // Only works after `FB.init` is called
               function myFacebookLogin() {
-                FB.login(function(){}, {scope: 'publish_actions'});
+                FB.login(function(){
+                  FB.api('/me', function(response) {
+                      if (response && !response.error) {
+                        window.facebookURL = "http://graph.facebook.com/" + response.id; // for picture: + "/picture?type=normal";
+                      }
+                    });
+                }, {scope: 'publish_actions'});
               }
             </script>
-            <div class="fb-login-button">
-            </div>
-            <b class="input-error">Nick must be alphanumeric characters only!</b>
+            <button onclick="myFacebookLogin()" style="width: 100%;">Login with Facebook</button>
+            <b class="input-error" id="facebook-error">You are not logged in to facebook</b>
+            <br />
+            <input type="text" tabindex="0" autofocus placeholder="Enter your nickname here" id="playerNameInput" maxlength="25" />
+            <b class="input-error" id="nick-error">Nick must be alphanumeric characters only!</b>
             <br />
             <input type="tel" tabindex="1" autofocus placeholder="Enter your phone number here" id="phoneNumberInput" maxlength="11" />
-            <b class="phone-error">Phone number is invalid!</b>
+            <b class="input-error" id="phone-error">Phone number is not valid</b>
             <br />
             <button id="startButton">Play</button>
             <button id="spectateButton">Spectate</button>
@@ -58,6 +67,7 @@
             </div>
         </div>
     </div>
+    <script src="js/facebook-login.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

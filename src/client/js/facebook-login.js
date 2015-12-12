@@ -7,14 +7,16 @@ window.fbAsyncInit = function() {
 
   FB.getLoginStatus(function(response) {
    if (response.status === 'connected') {
-     //TODO: Acutally log in :D
-     console.log('Logged in.');
-   }
+     FB.api('/me', function(response) {
+         if (response && !response.error) {
+           window.facebookURL = "http://graph.facebook.com/" + response.id; //for picture: + "/picture?type=normal";
+        }
+      });
+    }
    else {
-     console.log("Login");
      FB.login();
    }
- });
+  });
 };
 
 (function(d, s, id){

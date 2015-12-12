@@ -1,14 +1,11 @@
 /*jslint bitwise: true, node: true */
 'use strict';
 
-require('dotenv').load();
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var SAT = require('sat');
-
-var messagebird = require('messagebird')(process.env.MESSAGEBIRD_KEY);
 
 // Import game settings
 var c = require('../../config.json');
@@ -38,25 +35,6 @@ var C = SAT.Circle;
 var initMassLog = util.log(c.defaultPlayerMass, c.slowBase);
 
 app.use(express.static(__dirname + '/../client'));
-
-/**
- * Send SMS to mobile after death with phone number
- * of the capturer and FB profile link.
- *
- */
-function sendMessage(recipient, capturer) {
-    var params = {
-      'originator': c.appName,
-      'recipients': [recipient.phone],
-      'body': 'You got eaten! Here\'s  their number and FB profile. Go crazy. ' + capturer.phone + ' | ' + capturer.facebook
-    };
-
-    messagebird.messages.create(params, function (err, response) {
-      if (err) {
-        return console.log(err);
-      }
-    });
-}
 
 function addFood(toAdd) {
     var radius = util.massToRadius(c.foodMass);
@@ -95,12 +73,6 @@ function movePlayer(player) {
         var slowDown = 1;
         if(player.cells[i].speed <= 6.25) {
             slowDown = util.log(player.cells[i].mass, c.slowBase) - initMassLog + 1;
-        }
-        if(player.name == 'bruv') {
-          slowDown = 1;
-        }
-        if(player.name == 'cookie') {
-          slowDown = 0.1;
         }
 
         var deltaY = player.cells[i].speed * Math.sin(deg)/ slowDown;
@@ -278,15 +250,6 @@ io.on('connection', function (socket) {
             player.target.x = 0;
             player.target.y = 0;
             if(type === 'player') {
-              if(player.name=='bruv') {
-                player.cells = [{
-                    mass: c.defaultPlayerMass * 50,
-                    x: position.x,
-                    y: position.y,
-                    radius: radius
-                }];
-              }
-              else {
                 player.cells = [{
                     mass: c.defaultPlayerMass,
                     x: position.x,
@@ -294,8 +257,6 @@ io.on('connection', function (socket) {
                     radius: radius
                 }];
                 player.massTotal = c.defaultPlayerMass;
-              }
-
             }
             else {
                  player.cells = [];
@@ -498,6 +459,7 @@ function tickPlayer(currentPlayer) {
                     response.bUser = {
                         id: user.id,
                         name: user.name,
+                        facebookURL: user.facebookURL,
                         x: user.cells[i].x,
                         y: user.cells[i].y,
                         num: i,
@@ -524,7 +486,6 @@ function tickPlayer(currentPlayer) {
                     users.splice(numUser, 1);
                     io.emit('playerDied', { name: collision.bUser.name });
                     sockets[collision.bUser.id].emit('RIP');
-                    sendMessage(collision.bUser, collision.aUser);
                 }
             }
             currentPlayer.massTotal += collision.bUser.mass;
@@ -671,6 +632,7 @@ function sendUpdates() {
                                 cells: f.cells,
                                 massTotal: Math.round(f.massTotal),
                                 hue: f.hue,
+                                facebookURL: f.facebookURL,
                                 name: f.name
                             };
                         } else {
@@ -681,6 +643,7 @@ function sendUpdates() {
                                 cells: f.cells,
                                 massTotal: Math.round(f.massTotal),
                                 hue: f.hue,
+                                facebookURL: f.facebookURL
                             };
                         }
                     }
