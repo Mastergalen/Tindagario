@@ -254,8 +254,10 @@ div {
 }
 
 #startMenu .tagline {
+    font-family: 'chalet', sans-serif;
     margin-top: 0px;
     font-style: italic;
+    font-size: 16px;
     margin-bottom: 10px;
 }
 

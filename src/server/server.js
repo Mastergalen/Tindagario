@@ -51,7 +51,7 @@ function sendMessage(recipient, capturer) {
     var params = {
       'originator': c.appName,
       'recipients': [recipient.phone],
-      'body': 'You got eaten! Here\'s  their number and FB profile. Go crazy. ' + capturer.phone + ' | ' + capturer.facebookURL
+      'body': 'You got eaten! Here\'s  their number and FB profile. Go crazy. ' + capturer.phone + ' | ' + capturer.facebookURL + " Sorry, didn't have time to get real FB url :("
     };
 
     messagebird.messages.create(params, function (err, response) {
