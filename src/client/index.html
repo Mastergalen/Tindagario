@@ -19,7 +19,7 @@
     </div>
     <div id="startMenuWrapper">
         <div id="startMenu">
-            <h1>Tindagario</h1>
+            <h1>tindagar.io</h1>
             <h3 class="tagline">Eat and meet people</h3>
 
             <div class="form-group">
@@ -37,8 +37,8 @@
                 <b class="input-error" id="phone-error">Phone number is not valid</b>
             </div>
 
-            <button id="startButton">Play</button>
-            <button id="spectateButton">Spectate</button>
+            <button id="startButton" tabindex="2">Play</button>
+            <button id="spectateButton" tabindex="3">Spectate</button>
             <br />
             <div id="settings">
                 <h3>Settings</h3>
@@ -76,6 +76,6 @@
             window.facebookURL = "http://graph.facebook.com/" + response.id; // for picture: + "/picture?type=normal";
           }
         });
-    }, {scope: 'publish_actions'});
+    }, {scope: null });
   }
 </script>

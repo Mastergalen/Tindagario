@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'chalet';
+  src: url('/fonts/ChaletLondonNineteenSeventy.ttf');
+}
+
 * {
     font-family: sans-serif;
     font-size: 14px;
@@ -242,8 +247,10 @@ div {
 }
 
 #startMenu h1 {
-    font-size: x-large;
+    font-family: 'chalet', sans-serif;
+    font-size: 42px;
     margin-bottom: 10px;
+    margin-top: 0px;
 }
 
 #startMenu .tagline {

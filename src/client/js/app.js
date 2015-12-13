@@ -74,14 +74,14 @@ function validNick() {
 
 //TODO: Still needs testing
 function validPhone() {
-  var regex = /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/;
+  var regex = /^(07[\d]{8,12}|447[\d]{7,11})$/;
   var phoneErrorText = document.getElementById("phone-error");
   debug('Regex Test', regex.exec(phoneNumberInput.value));
+
   if(regex.exec(phoneNumberInput.value) !== null) {
     phoneErrorText.style.opacity = 0;
     return true;
-  }
-  else {
+  } else {
     phoneErrorText.style.opacity = 1;
     return false;
   }
@@ -89,11 +89,11 @@ function validPhone() {
 
 function facebookLoggedIn() {
   var facebookErrorText = document.getElementById("facebook-error");
+
   if(window.facebookURL !== "") {
     facebookErrorText.style.opacity = 0;
     return true;
-  }
-  else {
+  } else {
     facebookErrorText.style.opacity = 1;
     return false;
   }
@@ -109,8 +109,7 @@ window.onload = function() {
         startGame('spectate');
     };
     btn.onclick = function () {
-
-        // check if the nick is valid
+        // Validate form
         if (validNick() && validPhone() && facebookLoggedIn()) {
           startGame('player');
         }
@@ -776,8 +775,17 @@ function drawPlayers(order) {
         //graph.clip();
 
         var profileImage = new Image();
-        profileImage.src = userCurrent.facebookURL + "/picture?type=normal";
-        graph.drawImage(profileImage, circle.x - cellCurrent.radius, circle.y - cellCurrent.radius, cellCurrent.radius * 2, cellCurrent.radius * 2);
+        profileImage.src = userCurrent.facebookURL + "/picture?type=large";
+        
+        graph.beginPath();
+        graph.arc(circle.x, circle.y, cellCurrent.radius, 0, Math.PI * 2, true);
+        graph.closePath();
+        graph.clip();
+
+        graph.drawImage(profileImage, circle.x - cellCurrent.radius, circle.y - cellCurrent.radius, cellCurrent.radius * 2, cellCurrent.radius * 2);    
+
+        graph.restore();
+        
 
         //graph.restore();
         //graph.fill();
