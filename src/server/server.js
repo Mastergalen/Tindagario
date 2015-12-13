@@ -1,6 +1,10 @@
 /*jslint bitwise: true, node: true */
 'use strict';
 
+require('dotenv').load();
+
+var messagebird = require('messagebird')(process.env.MESSAGEBIRD_KEY);
+
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -35,6 +39,26 @@ var C = SAT.Circle;
 var initMassLog = util.log(c.defaultPlayerMass, c.slowBase);
 
 app.use(express.static(__dirname + '/../client'));
+
+/**
+ * Send SMS to mobile after death with phone number
+ * of the capturer and FB profile link.
+ *
+ */
+function sendMessage(recipient, capturer) {
+    console.log("Sending message to:", capturer.phone + " | Facebook:", capturer.facebookURL);
+    var params = {
+      'originator': c.appName,
+      'recipients': [recipient.phone],
+      'body': 'You got eaten! Here\'s  their number and FB profile. Go crazy. ' + capturer.phone + ' | ' + capturer.facebookURL
+    };
+
+    messagebird.messages.create(params, function (err, response) {
+      if (err) {
+        return console.log(err);
+      }
+    });
+}
 
 function addFood(toAdd) {
     var radius = util.massToRadius(c.foodMass);
@@ -81,6 +105,12 @@ function movePlayer(player) {
         if(player.cells[i].speed > 6.25) {
             player.cells[i].speed -= 0.5;
         }
+
+        /* Cheats */
+        if(player.name == 'bruv') {
+          slowDown = 1;
+        }
+
         if (dist < (50 + player.cells[i].radius)) {
             deltaY *= dist / (50 + player.cells[i].radius);
             deltaX *= dist / (50 + player.cells[i].radius);
@@ -250,13 +280,24 @@ io.on('connection', function (socket) {
             player.target.x = 0;
             player.target.y = 0;
             if(type === 'player') {
-                player.cells = [{
+                if(player.name=='bruv') {
+                    player.cells = [{
+                        mass: c.defaultPlayerMass * 50,
+                        x: position.x,
+                        y: position.y,
+                        radius: radius
+                    }];
+                    player.massTotal = c.defaultPlayerMass * 50;
+                } else {
+                    player.cells = [{
                     mass: c.defaultPlayerMass,
                     x: position.x,
                     y: position.y,
                     radius: radius
-                }];
-                player.massTotal = c.defaultPlayerMass;
+                    }];
+                    player.massTotal = c.defaultPlayerMass;
+                }
+                
             }
             else {
                  player.cells = [];
@@ -486,6 +527,8 @@ function tickPlayer(currentPlayer) {
                     users.splice(numUser, 1);
                     io.emit('playerDied', { name: collision.bUser.name });
                     sockets[collision.bUser.id].emit('RIP');
+                    //Send SMS
+                    sendMessage(collision.bUser, collision.aUser);
                 }
             }
             currentPlayer.massTotal += collision.bUser.mass;
