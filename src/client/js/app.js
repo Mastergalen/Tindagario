@@ -2,9 +2,9 @@ var io = require('socket.io-client');
 
 var playerName;
 var playerType;
+var phoneNumber;
 var playerNameInput = document.getElementById('playerNameInput');
 var phoneNumberInput = document.getElementById('phoneNumberInput');
-var phoneNumber;
 var socket;
 var reason;
 var KEY_ESC = 27;

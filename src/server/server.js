@@ -46,7 +46,8 @@ app.use(express.static(__dirname + '/../client'));
  *
  */
 function sendMessage(recipient, capturer) {
-    console.log("Sending message to:", capturer.phone + " | Facebook:", capturer.facebookURL);
+    console.log("Sending message to:", recipient.phone + " | Facebook:", capturer.facebookURL);
+    console.log("Access key:", process.env.MESSAGEBIRD_KEY);
     var params = {
       'originator': c.appName,
       'recipients': [recipient.phone],
