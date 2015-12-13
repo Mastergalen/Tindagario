@@ -506,6 +506,7 @@ function tickPlayer(currentPlayer) {
                         id: user.id,
                         name: user.name,
                         facebookURL: user.facebookURL,
+                        phone: user.phone,
                         x: user.cells[i].x,
                         y: user.cells[i].y,
                         num: i,
@@ -681,6 +682,7 @@ function sendUpdates() {
                                 massTotal: Math.round(f.massTotal),
                                 hue: f.hue,
                                 facebookURL: f.facebookURL,
+                                phone: f.phone,
                                 name: f.name
                             };
                         } else {
@@ -691,7 +693,8 @@ function sendUpdates() {
                                 cells: f.cells,
                                 massTotal: Math.round(f.massTotal),
                                 hue: f.hue,
-                                facebookURL: f.facebookURL
+                                facebookURL: f.facebookURL,
+                                phone: f.phone,
                             };
                         }
                     }
