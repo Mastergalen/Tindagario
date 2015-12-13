@@ -1,4 +1,4 @@
-Tindagario
+Tindagar.io
 =========
 
 [Agar.io](http://agar.io) with an important twist:
