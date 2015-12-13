@@ -19,31 +19,26 @@
     </div>
     <div id="startMenuWrapper">
         <div id="startMenu">
-            <p>Tindagario</p>
-            <script>
-              // Only works after `FB.init` is called
-              function myFacebookLogin() {
-                FB.login(function(){
-                  FB.api('/me', function(response) {
-                      if (response && !response.error) {
-                        window.facebookURL = "http://graph.facebook.com/" + response.id; // for picture: + "/picture?type=normal";
-                      }
-                    });
-                }, {scope: 'publish_actions'});
-              }
-            </script>
-            <button onclick="myFacebookLogin()" style="width: 100%;">Login with Facebook</button>
-            <b class="input-error" id="facebook-error">You are not logged in to facebook</b>
-            <br />
-            <input type="text" tabindex="0" autofocus placeholder="Enter your nickname here" id="playerNameInput" maxlength="25" />
-            <b class="input-error" id="nick-error">Nick must be alphanumeric characters only!</b>
-            <br />
-            <input type="tel" tabindex="1" autofocus placeholder="Enter your phone number here" id="phoneNumberInput" maxlength="11" />
-            <b class="input-error" id="phone-error">Phone number is not valid</b>
-            <br />
+            <h1>Tindagario</h1>
+            <h3 class="tagline">Eat and meet people</h3>
+
+            <div class="form-group">
+                <button onclick="myFacebookLogin()" class="btn-facebook" style="width: 100%;">Login with Facebook</button>
+                <b class="input-error" id="facebook-error">Please log in via Facebook first</b>
+            </div>
+            
+            <div class="form-group">
+                <input type="text" tabindex="0" autofocus placeholder="Enter your nickname here" id="playerNameInput" maxlength="25" />
+                <b class="input-error" id="nick-error">Nick must be alphanumeric characters only!</b>
+            </div>
+            
+            <div class="form-group">
+                <input type="tel" tabindex="1" autofocus placeholder="Enter your phone number here" id="phoneNumberInput" maxlength="11" />
+                <b class="input-error" id="phone-error">Phone number is not valid</b>
+            </div>
+
             <button id="startButton">Play</button>
             <button id="spectateButton">Spectate</button>
-            <button id="settingsButton">Settings</button>
             <br />
             <div id="settings">
                 <h3>Settings</h3>
@@ -61,8 +56,8 @@
                 <ul>
                     <li>Move your mouse on the screen to move your character</li>
                     <li>Eat food and other players in order to grow your character (food respawns every time a player eats it)</li>
-                    <li>A player's mass is the number of food particles eaten</li>
-                    <li>Objective: Try to get fat and date other players</li>
+                    <li>When a player gets eaten, they receive the phone number and Facebook profile link of the consumer. The more players you eat, the more you're out there.</li>
+                    <li>Objective: Try to get fat and give your phone no. to other players</li>
                 </ul>
             </div>
         </div>
@@ -71,3 +66,16 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+
+<script>
+  // Only works after `FB.init` is called
+  function myFacebookLogin() {
+    FB.login(function(){
+      FB.api('/me', function(response) {
+          if (response && !response.error) {
+            window.facebookURL = "http://graph.facebook.com/" + response.id; // for picture: + "/picture?type=normal";
+          }
+        });
+    }, {scope: 'publish_actions'});
+  }
+</script>

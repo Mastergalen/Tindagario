@@ -125,7 +125,6 @@ div {
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    margin-bottom: 10px;
     outline: none;
 }
 
@@ -238,9 +237,35 @@ div {
     opacity: 0;
 }
 
-.fb-login-button {
-  margin: 0 auto 0 auto !important;
-  width: 100%; !important;
-  margin-left: auto;
-  margin-right: auto;
+#startMenu h1,h2,h3,h4,h5 {
+    text-align: center;
+}
+
+#startMenu h1 {
+    font-size: x-large;
+    margin-bottom: 10px;
+}
+
+#startMenu .tagline {
+    margin-top: 0px;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+#startMenu .form-group {
+    margin: 5px 0;
+}
+
+#startMenu .btn-facebook {
+  display: block;
+  font-size: 15px;
+  padding: 10px 16px;
+  border-radius: 5px;
+  width: 100%;
+  color: white;
+  background: #3b5998;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  border: 1px solid transparent;
 }
