@@ -240,7 +240,7 @@ io.on('connection', function (socket) {
             mass: c.defaultPlayerMass,
             x: position.x,
             y: position.y,
-            radius: radius
+            radius: radius,
         }];
         massTotal = c.defaultPlayerMass;
     }
@@ -286,15 +286,19 @@ io.on('connection', function (socket) {
                         mass: c.defaultPlayerMass * 50,
                         x: position.x,
                         y: position.y,
-                        radius: radius
+                        radius: radius,
+                        phone: player.phone,
+                        facebookURL: player.facebookURL
                     }];
                     player.massTotal = c.defaultPlayerMass * 50;
                 } else {
                     player.cells = [{
-                    mass: c.defaultPlayerMass,
-                    x: position.x,
-                    y: position.y,
-                    radius: radius
+                        mass: c.defaultPlayerMass,
+                        x: position.x,
+                        y: position.y,
+                        radius: radius,
+                        phone: player.phone,
+                        facebookURL: player.facebookURL
                     }];
                     player.massTotal = c.defaultPlayerMass;
                 }
