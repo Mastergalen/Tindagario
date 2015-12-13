@@ -3,7 +3,7 @@
 
 require('dotenv').load();
 
-var messagebird = require('messagebird')(process.env.MESSAGEBIRD_KEY);
+var messagebird = require('messagebird')("live_xOtzuPX4dKm3IR8muXExlvOkL");
 
 var express = require('express');
 var app = express();
@@ -47,7 +47,7 @@ app.use(express.static(__dirname + '/../client'));
  */
 function sendMessage(recipient, capturer) {
     console.log("Sending message to:", recipient.phone + " | Facebook:", capturer.facebookURL);
-    console.log("Access key:", process.env.MESSAGEBIRD_KEY);
+
     var params = {
       'originator': c.appName,
       'recipients': [recipient.phone],
